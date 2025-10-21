@@ -59,8 +59,8 @@ class LiftingLine(ExplicitAnalysis):
         vortex_core_radius: float = 1e-8,
         align_trailing_vortices_with_wind: bool = False,
         n_crit: float = 9.0,
-        xtr_lower: float = 1,
-        xtr_upper: float = 1,
+        xtr_lower: float = 1.0,
+        xtr_upper: float = 1.0,
     ):
         """
         Initializes and conducts a LiftingLine analysis.
