@@ -50,6 +50,9 @@ class LiftingLine(ExplicitAnalysis):
         op_point: OperatingPoint,
         xyz_ref: List[float] = None,
         model_size: str = "medium",
+        n_crit: Union[float, np.ndarray] = 9.0,
+        xtr_upper: Union[float, np.ndarray] = 1.0,
+        xtr_lower: Union[float, np.ndarray] = 1.0,
         run_symmetric_if_possible: bool = False,
         verbose: bool = False,
         spanwise_resolution: int = 4,
@@ -67,6 +70,14 @@ class LiftingLine(ExplicitAnalysis):
             airplane: An Airplane object that you want to analyze.
 
             op_point: The OperatingPoint that you want to analyze the Airplane at.
+
+            model_size: The size of the NeuralFoil model to use for sectional airfoil aerodynamics.
+
+            n_crit: The critical amplification factor for NeuralFoil transition prediction.
+
+            xtr_upper: The upper-surface forced transition location [x/c] passed to NeuralFoil.
+
+            xtr_lower: The lower-surface forced transition location [x/c] passed to NeuralFoil.
 
             run_symmetric_if_possible: If this flag is True and the problem fomulation is XZ-symmetric, the solver will
             attempt to exploit the symmetry. This results in roughly half the number of governing equations.
@@ -90,6 +101,9 @@ class LiftingLine(ExplicitAnalysis):
         self.op_point = op_point
         self.xyz_ref = xyz_ref
         self.model_size = model_size
+        self.n_crit = n_crit
+        self.xtr_upper = xtr_upper
+        self.xtr_lower = xtr_lower
         self.verbose = verbose
         self.spanwise_resolution = spanwise_resolution
         self.spanwise_spacing_function = spanwise_spacing_function
@@ -723,6 +737,9 @@ class LiftingLine(ExplicitAnalysis):
                 alpha=alpha_geometrics[i],
                 Re=Res[i],
                 mach=machs[i],
+                n_crit=self.n_crit,
+                xtr_upper=self.xtr_upper,
+                xtr_lower=self.xtr_lower,
                 control_surfaces=control_surfaces[i],
                 model_size=self.model_size,
             )["CL"]
@@ -802,6 +819,9 @@ class LiftingLine(ExplicitAnalysis):
                 alpha=alphas[i],
                 Re=Res[i],
                 mach=machs[i],
+                n_crit=self.n_crit,
+                xtr_upper=self.xtr_upper,
+                xtr_lower=self.xtr_lower,
                 control_surfaces=control_surfaces[i],
                 model_size=self.model_size,
             )
