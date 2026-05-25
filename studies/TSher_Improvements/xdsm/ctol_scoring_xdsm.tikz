@@ -1,0 +1,434 @@
+
+%%% Preamble Requirements %%%
+% \usepackage{geometry}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{tikz}
+
+% Optional packages such as sfmath set through python interface
+% \usepackage{sfmath}
+
+% \usetikzlibrary{arrows,chains,positioning,scopes,shapes.geometric,shapes.misc,shadows}
+
+%%% End Preamble Requirements %%%
+
+\input{"C:/Users/tsher/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/Lib/site-packages/pyxdsm/diagram_styles"}
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+&
+\node [DataIO] (output_opt) {$\begin{array}{c}\text{bounds, guesses} \\ \text{fixed mission constants}\end{array}$};&
+\node [DataIO] (output_propfit) {$\begin{array}{c}\text{PER3\_9x45E.dat} \\ \text{APC prop table}\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+%Row 1
+&
+\node [Optimization] (opt) {$\begin{array}{c}\text{D1 Optimizer} \\ \text{design variables}\end{array}$};&
+&
+\node [DataInter] (opt-geom) {$\begin{array}{c}S, AR, \lambda \\ S_t, x_t, S_v \\ v_s, d_{spar}, t_{tb}\end{array}$};&
+&
+\node [DataInter] (opt-cruise) {$\begin{array}{c}\alpha_c, \delta_{e,c} \\ v_{cruise}\end{array}$};&
+\node [DataInter] (opt-stall) {$\begin{array}{c}\alpha_s, \delta_{e,s} \\ v_{stall}\end{array}$};&
+\node [DataInter] (opt-turn) {$\begin{array}{c}\alpha_t, \delta_{e,t} \\ \phi_{turn}\end{array}$};&
+\node [DataInter] (opt-climb) {$\begin{array}{c}\alpha_{cl}, \delta_{e,cl} \\ \gamma_{climb}\end{array}$};&
+\node [DataInter] (opt-vmax) {$\begin{array}{c}\alpha_{max}, \delta_{e,max} \\ v_{max}\end{array}$};&
+&
+\node [DataInter] (opt-prop) {$\begin{array}{c}RPM_i, \tau_i \\ W_{prop,max}\end{array}$};&
+&
+&
+\node [DataInter] (opt-weights) {$W_{prop,max}$};&
+&
+\\
+%Row 2
+&
+&
+\node [Metamodel] (propfit) {$\begin{array}{c}\text{D0 APC} \\ \text{surrogate fit}\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [DataInter] (propfit-prop) {$\begin{array}{c}\hat{T}_{prop}(v,RPM) \\ \hat{Q}_{prop}(v,RPM) \\ \hat{P}_{prop}(v,RPM)\end{array}$};&
+&
+&
+&
+&
+\\
+%Row 3
+\node [DataIO] (left_output_geom) {$\begin{array}{c}\text{optimized geometry} \\ \text{speeds} \\ \text{CG and SM}\end{array}$};&
+&
+&
+\node [Function] (geom) {$\begin{array}{c}\text{D2 Geometry} \\ \text{builder}\end{array}$};&
+\node [DataInter] (geom-stab) {$\begin{array}{c}\text{stability airplane} \\ c_{ref}, v_{cruise}\end{array}$};&
+\node [DataInter] (geom-cruise) {$\begin{array}{c}\text{airplane geometry} \\ v, c_r, c_t, b \\ c_{rt}, c_{tt}, b_t\end{array}$};&
+\node [DataInter] (geom-stall) {$\begin{array}{c}\text{airplane geometry} \\ v, c_r, c_t, b \\ c_{rt}, c_{tt}, b_t\end{array}$};&
+\node [DataInter] (geom-turn) {$\begin{array}{c}\text{airplane geometry} \\ v, c_r, c_t, b \\ c_{rt}, c_{tt}, b_t\end{array}$};&
+\node [DataInter] (geom-climb) {$\begin{array}{c}\text{airplane geometry} \\ v, c_r, c_t, b \\ c_{rt}, c_{tt}, b_t\end{array}$};&
+\node [DataInter] (geom-vmax) {$\begin{array}{c}\text{airplane geometry} \\ v, c_r, c_t, b \\ c_{rt}, c_{tt}, b_t\end{array}$};&
+&
+&
+&
+\node [DataInter] (geom-struct) {$\begin{array}{c}d_{spar}, t_{tb} \\ l_t, S_t, v_{max} \\ \text{boom dimensions}\end{array}$};&
+\node [DataInter] (geom-weights) {$\begin{array}{c}S, S_t, S_v, b \\ l_t, x_{fuse} \\ d_{spar}, t_{tb}\end{array}$};&
+\node [DataInter] (geom-score) {$\begin{array}{c}v_{min} \\ v_{cruise} \\ v_{max}\end{array}$};&
+\\
+%Row 4
+&
+\node [DataInter] (stab-opt) {$\begin{array}{c}x_{np}, C_{m_\alpha}, C_{L_\alpha} \\ \text{SM constraint}\end{array}$};&
+&
+&
+\node [Function] (stab) {$\begin{array}{c}\text{D3 Stability} \\ \text{VLM}\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+%Row 5
+&
+\node [DataInter] (cruise-opt) {$\begin{array}{c}L_c, C_{m,c} \\ \text{trim residuals}\end{array}$};&
+&
+&
+&
+\node [Function] (cruise) {$\begin{array}{c}\text{D4 Cruise} \\ \text{lifting line}\end{array}$};&
+&
+&
+&
+&
+\node [DataInter] (cruise-drag) {$\begin{array}{c}C_{D,c} \\ v_c, S, l_f\end{array}$};&
+&
+&
+&
+&
+&
+\\
+%Row 6
+&
+\node [DataInter] (stall-opt) {$\begin{array}{c}L_s, C_{m,s} \\ \text{trim residuals}\end{array}$};&
+&
+&
+&
+&
+\node [Function] (stall) {$\begin{array}{c}\text{D5 Stall} \\ \text{lifting line}\end{array}$};&
+&
+&
+&
+\node [DataInter] (stall-drag) {$\begin{array}{c}C_{D,s} \\ v_s, S, l_f\end{array}$};&
+&
+&
+&
+&
+&
+\\
+%Row 7
+&
+\node [DataInter] (turn-opt) {$\begin{array}{c}L_t, C_{m,t} \\ \text{trim residuals}\end{array}$};&
+&
+&
+&
+&
+&
+\node [Function] (turn) {$\begin{array}{c}\text{D6 Turn} \\ \text{lifting line}\end{array}$};&
+&
+&
+\node [DataInter] (turn-drag) {$\begin{array}{c}C_{D,t} \\ v_t, S, l_f\end{array}$};&
+&
+&
+\node [DataInter] (turn-struct) {$\begin{array}{c}y_{forces} \\ L_{forces} \\ \text{turn wing loads}\end{array}$};&
+&
+&
+\\
+%Row 8
+&
+\node [DataInter] (climb-opt) {$\begin{array}{c}L_cl, C_{m,cl} \\ \text{trim residuals}\end{array}$};&
+&
+&
+&
+&
+&
+&
+\node [Function] (climb) {$\begin{array}{c}\text{D7 Climb} \\ \text{lifting line}\end{array}$};&
+&
+\node [DataInter] (climb-drag) {$\begin{array}{c}C_{D,cl} \\ v_cl, S, l_f\end{array}$};&
+&
+&
+&
+&
+&
+\\
+%Row 9
+&
+\node [DataInter] (vmax-opt) {$\begin{array}{c}L_max, C_{m,max} \\ \text{trim residuals}\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (vmax) {$\begin{array}{c}\text{D8 Vmax} \\ \text{lifting line}\end{array}$};&
+\node [DataInter] (vmax-drag) {$\begin{array}{c}C_{D,max} \\ v_max, S, l_f\end{array}$};&
+&
+&
+&
+&
+&
+\\
+%Row 10
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (drag) {$\begin{array}{c}\text{D9 Drag} \\ \text{buildup}\end{array}$};&
+\node [DataInter] (drag-prop) {$\begin{array}{c}D_i \\ P_{aero,i} \\ \text{required thrust}\end{array}$};&
+&
+&
+&
+&
+\\
+%Row 11
+\node [DataIO] (left_output_prop) {$\begin{array}{c}RPM_i, \tau_i \\ T_i, P_i, \eta_i\end{array}$};&
+\node [DataInter] (prop-opt) {$\begin{array}{c}T_{prop,i}-D_i \\ P_{prop,i}-P_{shaft,i} \\ \eta_i\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (prop) {$\begin{array}{c}\text{D10 Prop/Motor} \\ \text{coupling}\end{array}$};&
+\node [DataInter] (prop-battery) {$\begin{array}{c}P_{cruise} \\ P_{turn} \\ P_{climb}\end{array}$};&
+&
+&
+&
+\\
+%Row 12
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (battery) {$\begin{array}{c}\text{D11 Mission} \\ \text{battery}\end{array}$};&
+&
+\node [DataInter] (battery-weights) {$\begin{array}{c}C_{req} \\ m_{batt} \\ W_{batt}\end{array}$};&
+&
+\\
+%Row 13
+\node [DataIO] (left_output_struct) {$\begin{array}{c}\text{spar margins} \\ \text{tail boom margins}\end{array}$};&
+\node [DataInter] (struct-opt) {$\begin{array}{c}u_{tip}, u'_{tip} \\ \sigma_{spar}, \epsilon_{tb} \\ \text{structural constraints}\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (struct) {$\begin{array}{c}\text{D12 Structures} \\ \text{spar and boom}\end{array}$};&
+&
+&
+\\
+%Row 14
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (weights) {$\begin{array}{c}\text{D13 Weight} \\ \text{model}\end{array}$};&
+\node [DataInter] (weights-score) {$\begin{array}{c}W_{total} \\ W_{payload}\end{array}$};&
+\\
+%Row 15
+\node [DataIO] (left_output_score) {$\begin{array}{c}J^* \\ W_{payload} \\ \text{score components}\end{array}$};&
+\node [DataInter] (score-opt) {$\begin{array}{c}J=\text{flight score} \\ \text{takeoff, delivery, RTB, bonus}\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (score) {$\begin{array}{c}\text{D14 Scoring} \\ \text{objective}\end{array}$};&
+\\
+%Row 16
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+};
+
+% XDSM process chains
+{ [start chain=process]
+ \begin{pgfonlayer}{process} 
+\chainin (opt);
+\chainin (geom) [join=by ProcessHVA];
+\chainin (stab) [join=by ProcessHVA];
+\chainin (cruise) [join=by ProcessHVA];
+\chainin (stall) [join=by ProcessHVA];
+\chainin (turn) [join=by ProcessHVA];
+\chainin (climb) [join=by ProcessHVA];
+\chainin (vmax) [join=by ProcessHVA];
+\chainin (drag) [join=by ProcessHVA];
+\chainin (prop) [join=by ProcessHVA];
+\chainin (battery) [join=by ProcessHVA];
+\chainin (weights) [join=by ProcessHVA];
+\chainin (score) [join=by ProcessHVA];
+\chainin (opt) [join=by ProcessHVA];
+\end{pgfonlayer}
+}
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(opt) edge [DataLine] (opt-geom)
+(geom) edge [DataLine] (geom-stab)
+(stab) edge [DataLine] (stab-opt)
+(geom) edge [DataLine] (geom-cruise)
+(geom) edge [DataLine] (geom-stall)
+(geom) edge [DataLine] (geom-turn)
+(geom) edge [DataLine] (geom-climb)
+(geom) edge [DataLine] (geom-vmax)
+(opt) edge [DataLine] (opt-cruise)
+(opt) edge [DataLine] (opt-stall)
+(opt) edge [DataLine] (opt-turn)
+(opt) edge [DataLine] (opt-climb)
+(opt) edge [DataLine] (opt-vmax)
+(cruise) edge [DataLine] (cruise-opt)
+(cruise) edge [DataLine] (cruise-drag)
+(stall) edge [DataLine] (stall-opt)
+(stall) edge [DataLine] (stall-drag)
+(turn) edge [DataLine] (turn-opt)
+(turn) edge [DataLine] (turn-drag)
+(climb) edge [DataLine] (climb-opt)
+(climb) edge [DataLine] (climb-drag)
+(vmax) edge [DataLine] (vmax-opt)
+(vmax) edge [DataLine] (vmax-drag)
+(turn) edge [DataLine] (turn-struct)
+(geom) edge [DataLine] (geom-struct)
+(struct) edge [DataLine] (struct-opt)
+(propfit) edge [DataLine] (propfit-prop)
+(opt) edge [DataLine] (opt-prop)
+(drag) edge [DataLine] (drag-prop)
+(prop) edge [DataLine] (prop-opt)
+(prop) edge [DataLine] (prop-battery)
+(battery) edge [DataLine] (battery-weights)
+(geom) edge [DataLine] (geom-weights)
+(opt) edge [DataLine] (opt-weights)
+(weights) edge [DataLine] (weights-score)
+(geom) edge [DataLine] (geom-score)
+(score) edge [DataLine] (score-opt)
+(score) edge [DataLine] (left_output_score)
+(geom) edge [DataLine] (left_output_geom)
+(prop) edge [DataLine] (left_output_prop)
+(struct) edge [DataLine] (left_output_struct)
+% Vertical edges
+(opt-geom) edge [DataLine] (geom)
+(geom-stab) edge [DataLine] (stab)
+(stab-opt) edge [DataLine] (opt)
+(geom-cruise) edge [DataLine] (cruise)
+(geom-stall) edge [DataLine] (stall)
+(geom-turn) edge [DataLine] (turn)
+(geom-climb) edge [DataLine] (climb)
+(geom-vmax) edge [DataLine] (vmax)
+(opt-cruise) edge [DataLine] (cruise)
+(opt-stall) edge [DataLine] (stall)
+(opt-turn) edge [DataLine] (turn)
+(opt-climb) edge [DataLine] (climb)
+(opt-vmax) edge [DataLine] (vmax)
+(cruise-opt) edge [DataLine] (opt)
+(cruise-drag) edge [DataLine] (drag)
+(stall-opt) edge [DataLine] (opt)
+(stall-drag) edge [DataLine] (drag)
+(turn-opt) edge [DataLine] (opt)
+(turn-drag) edge [DataLine] (drag)
+(climb-opt) edge [DataLine] (opt)
+(climb-drag) edge [DataLine] (drag)
+(vmax-opt) edge [DataLine] (opt)
+(vmax-drag) edge [DataLine] (drag)
+(turn-struct) edge [DataLine] (struct)
+(geom-struct) edge [DataLine] (struct)
+(struct-opt) edge [DataLine] (opt)
+(propfit-prop) edge [DataLine] (prop)
+(opt-prop) edge [DataLine] (prop)
+(drag-prop) edge [DataLine] (prop)
+(prop-opt) edge [DataLine] (opt)
+(prop-battery) edge [DataLine] (battery)
+(battery-weights) edge [DataLine] (weights)
+(geom-weights) edge [DataLine] (weights)
+(opt-weights) edge [DataLine] (weights)
+(weights-score) edge [DataLine] (score)
+(geom-score) edge [DataLine] (score)
+(score-opt) edge [DataLine] (opt)
+(propfit) edge [DataLine] (output_propfit)
+(opt) edge [DataLine] (output_opt);
+\end{pgfonlayer}
+
+\end{tikzpicture}
