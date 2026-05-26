@@ -140,6 +140,15 @@ class LiftingLine(ExplicitAnalysis):
             + "\n)"
         )
 
+    def __getitem__(self, item):
+        try:
+            return self.output[item]
+        except AttributeError:
+            raise AttributeError(
+                "This LiftingLine object has no saved output yet. "
+                "Call `.run()` before using dictionary-style indexing."
+            )
+
     @dataclass
     class AeroComponentResults:
         s_ref: float  # Reference area [m^2]
@@ -274,8 +283,24 @@ class LiftingLine(ExplicitAnalysis):
             - 'Cl', the rolling coefficient [-], in body axes
             - 'Cm', the pitching coefficient [-], in body axes
             - 'Cn', the yawing coefficient [-], in body axes
+            - 'spanwise_y', the spanwise strip center y-locations [m].
+            - 'spanwise_dy', the projected-y strip widths [m].
+            - 'spanwise_chord', the strip chord lengths [m].
+            - 'spanwise_lift', the inviscid strip lift forces [N].
+            - 'spanwise_lift_per_y', the inviscid strip lift per projected y [N/m].
+            - 'spanwise_cl', the inviscid strip sectional lift coefficients [-].
+            - 'spanwise_clc_over_cref', equal to spanwise_cl * spanwise_chord / airplane.c_ref [-].
+            - 'spanwise_wing_index', the integer index of each strip's parent wing.
+            - 'spanwise_side', 1 for the original/right side and -1 for the mirrored side.
+            - 'y', a list of per-wing y-location vectors [m], ordered left-to-right for symmetric wings.
+            - 'cl', a list of per-wing sectional lift coefficient vectors [-].
+            - 'clc_over_cref', a list of per-wing cl * c / airplane.c_ref vectors [-].
 
         Nondimensional values are nondimensionalized using reference values in the LiftingLine.airplane object.
+        Spanwise distributions are returned in mesh order; sort by 'spanwise_y' before plotting if desired. They use
+        projected-y widths, so they are intended for wings and tails with nonzero spanwise y extent. The LiftingLine
+        spanwise lift distribution is based on the inviscid lifting-surface forces and does not include fuselage lift.
+        The per-wing 'y', 'cl', and 'clc_over_cref' lists are already ordered for plotting.
 
         Data types:
             - The "L", "Y", "D", "l_b", "m_b", "n_b", "CL", "CY", "CD", "Cl", "Cm", and "Cn" keys are:
@@ -355,12 +380,31 @@ class LiftingLine(ExplicitAnalysis):
         output["wing_aero"] = wing_aero
         output["fuselage_aero_components"] = fuselage_aero_components
 
+        ##### Add spanwise lifting-surface distributions.
+        output["spanwise_y"] = self.spanwise_y
+        output["spanwise_dy"] = self.spanwise_dy
+        output["spanwise_chord"] = self.spanwise_chord
+        output["spanwise_lift"] = self.spanwise_lift
+        output["spanwise_lift_per_y"] = self.spanwise_lift_per_y
+        output["spanwise_cl"] = self.spanwise_cl
+        output["spanwise_clc_over_cref"] = self.spanwise_clc_over_cref
+        output["spanwise_wing_index"] = self.spanwise_wing_index
+        output["spanwise_side"] = self.spanwise_side
+        output["y"] = self.y
+        output["dy"] = self.dy
+        output["chord"] = self.chord
+        output["lift"] = self.lift
+        output["lift_per_y"] = self.lift_per_y
+        output["cl"] = self.cl
+        output["clc_over_cref"] = self.clc_over_cref
+
         # ##### Add the drag breakdown
         # output["D_profile"] = sum([
         #     comp.D for comp in aero_components
         # ])
         # output["D_induced"] = D_induced
 
+        self.output = output
         return output
 
     def run_with_stability_derivatives(
@@ -555,8 +599,13 @@ class LiftingLine(ExplicitAnalysis):
         front_right_vertices = []
         airfoils: List[Airfoil] = []
         control_surfaces: List[List[ControlSurface]] = []
+        panel_wing_indices = []
+        panel_side_indices = []
+        panel_spanwise_indices = []
 
-        for wing in self.airplane.wings:  # subdivide the wing in more spanwise sections
+        for wing_index, wing in enumerate(
+            self.airplane.wings
+        ):  # subdivide the wing in more spanwise sections
             if self.spanwise_resolution > 1:
                 wing = wing.subdivide_sections(
                     ratio=self.spanwise_resolution,
@@ -574,6 +623,9 @@ class LiftingLine(ExplicitAnalysis):
             back_right_vertices.append(points[faces[:, 2], :])
             front_right_vertices.append(points[faces[:, 3], :])
 
+            n_spanwise_panels = len(wing.xsecs) - 1
+            spanwise_indices_one_side = np.arange(n_spanwise_panels)
+
             wing_airfoils = []
             wing_control_surfaces = []
 
@@ -590,6 +642,9 @@ class LiftingLine(ExplicitAnalysis):
 
             airfoils.extend(wing_airfoils)
             control_surfaces.extend(wing_control_surfaces)
+            panel_wing_indices.append(np.ones(n_spanwise_panels) * wing_index)
+            panel_side_indices.append(np.ones(n_spanwise_panels))
+            panel_spanwise_indices.append(spanwise_indices_one_side)
 
             if wing.symmetric:  # Do the left side, if applicable
                 airfoils.extend(wing_airfoils)
@@ -608,11 +663,17 @@ class LiftingLine(ExplicitAnalysis):
                 ]
 
                 control_surfaces.extend(symmetric_wing_control_surfaces)
+                panel_wing_indices.append(np.ones(n_spanwise_panels) * wing_index)
+                panel_side_indices.append(-np.ones(n_spanwise_panels))
+                panel_spanwise_indices.append(spanwise_indices_one_side)
 
         front_left_vertices = np.concatenate(front_left_vertices)
         back_left_vertices = np.concatenate(back_left_vertices)
         back_right_vertices = np.concatenate(back_right_vertices)
         front_right_vertices = np.concatenate(front_right_vertices)
+        panel_wing_indices = np.concatenate(panel_wing_indices)
+        panel_side_indices = np.concatenate(panel_side_indices)
+        panel_spanwise_indices = np.concatenate(panel_spanwise_indices)
 
         ### Compute panel statistics
         diag1 = front_right_vertices - back_left_vertices
@@ -652,6 +713,9 @@ class LiftingLine(ExplicitAnalysis):
         self.chords = chords
         self.local_forward_direction = local_forward_direction
         self.n_panels = areas.shape[0]
+        self.panel_wing_indices = panel_wing_indices
+        self.panel_side_indices = panel_side_indices
+        self.panel_spanwise_indices = panel_spanwise_indices
 
         ##### Setup Operating Point
         if self.verbose:
@@ -864,6 +928,92 @@ class LiftingLine(ExplicitAnalysis):
         # Calculate total forces and moments
         force_inviscid_geometry = np.sum(forces_inviscid_geometry, axis=0)
         moment_inviscid_geometry = np.sum(moments_inviscid_geometry, axis=0)
+
+        forces_inviscid_wind = self.op_point.convert_axes(
+            forces_inviscid_geometry[:, 0],
+            forces_inviscid_geometry[:, 1],
+            forces_inviscid_geometry[:, 2],
+            from_axes="geometry",
+            to_axes="wind",
+        )
+        spanwise_lift = -forces_inviscid_wind[2]
+        spanwise_dy = np.abs(right_vortex_vertices[:, 1] - left_vortex_vertices[:, 1])
+        spanwise_lift_per_y = spanwise_lift / spanwise_dy
+        spanwise_cl = spanwise_lift_per_y / self.op_point.dynamic_pressure() / chords
+        spanwise_clc_over_cref = (
+            spanwise_lift_per_y / self.op_point.dynamic_pressure() / self.airplane.c_ref
+        )
+
+        def get_wing_indices(wing_index):
+            indices = []
+            for side in [-1, 1]:
+                side_indices = [
+                    i
+                    for i, (this_wing_index, this_side) in enumerate(
+                        zip(panel_wing_indices, panel_side_indices)
+                    )
+                    if this_wing_index == wing_index and this_side == side
+                ]
+                side_indices = sorted(
+                    side_indices,
+                    key=lambda i: panel_spanwise_indices[i],
+                    reverse=side == -1,
+                )
+                indices.extend(side_indices)
+            return indices
+
+        wing_indices = [
+            get_wing_indices(wing_index) for wing_index in range(len(self.airplane.wings))
+        ]
+        y = [
+            np.array([vortex_centers[i, 1] for i in indices])
+            for indices in wing_indices
+        ]
+        dy = [
+            np.array([spanwise_dy[i] for i in indices])
+            for indices in wing_indices
+        ]
+        chord = [
+            np.array([chords[i] for i in indices])
+            for indices in wing_indices
+        ]
+        lift = [
+            np.array([spanwise_lift[i] for i in indices])
+            for indices in wing_indices
+        ]
+        lift_per_y = [
+            np.array([spanwise_lift_per_y[i] for i in indices])
+            for indices in wing_indices
+        ]
+        cl = [
+            np.array([spanwise_cl[i] for i in indices])
+            for indices in wing_indices
+        ]
+        clc_over_cref = [
+            np.array([spanwise_clc_over_cref[i] for i in indices])
+            for indices in wing_indices
+        ]
+
+        self.forces_inviscid_geometry = forces_inviscid_geometry
+        self.moments_inviscid_geometry = moments_inviscid_geometry
+        self.force_inviscid_geometry = force_inviscid_geometry
+        self.moment_inviscid_geometry = moment_inviscid_geometry
+        self.spanwise_y = vortex_centers[:, 1]
+        self.spanwise_dy = spanwise_dy
+        self.spanwise_chord = chords
+        self.spanwise_lift = spanwise_lift
+        self.spanwise_lift_per_y = spanwise_lift_per_y
+        self.spanwise_cl = spanwise_cl
+        self.spanwise_clc_over_cref = spanwise_clc_over_cref
+        self.spanwise_wing_index = panel_wing_indices
+        self.spanwise_side = panel_side_indices
+        self.y = y
+        self.dy = dy
+        self.chord = chord
+        self.lift = lift
+        self.lift_per_y = lift_per_y
+        self.cl = cl
+        self.clc_over_cref = clc_over_cref
 
         if self.verbose:
             print("Calculating profile forces and moments...")

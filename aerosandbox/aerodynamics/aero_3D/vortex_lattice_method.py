@@ -105,6 +105,15 @@ class VortexLatticeMethod(ExplicitAnalysis):
             + "\n)"
         )
 
+    def __getitem__(self, item):
+        try:
+            return self.output[item]
+        except AttributeError:
+            raise AttributeError(
+                "This VortexLatticeMethod object has no saved output yet. "
+                "Call `.run()` before using dictionary-style indexing."
+            )
+
     def run(self) -> Dict[str, Any]:
         """
         Computes the aerodynamic forces.
@@ -129,8 +138,23 @@ class VortexLatticeMethod(ExplicitAnalysis):
             - 'Cl', the rolling coefficient [-], in body axes
             - 'Cm', the pitching coefficient [-], in body axes
             - 'Cn', the yawing coefficient [-], in body axes
+            - 'spanwise_y', the spanwise strip center y-locations [m].
+            - 'spanwise_dy', the projected-y strip widths [m].
+            - 'spanwise_chord', the strip chord lengths [m].
+            - 'spanwise_lift', the strip lift forces [N].
+            - 'spanwise_lift_per_y', the strip lift per projected y [N/m].
+            - 'spanwise_cl', the strip sectional lift coefficients [-].
+            - 'spanwise_clc_over_cref', equal to spanwise_cl * spanwise_chord / airplane.c_ref [-].
+            - 'spanwise_wing_index', the integer index of each strip's parent wing.
+            - 'spanwise_side', 1 for the original/right side and -1 for the mirrored side.
+            - 'y', a list of per-wing y-location vectors [m], ordered left-to-right for symmetric wings.
+            - 'cl', a list of per-wing sectional lift coefficient vectors [-].
+            - 'clc_over_cref', a list of per-wing cl * c / airplane.c_ref vectors [-].
 
         Nondimensional values are nondimensionalized using reference values in the VortexLatticeMethod.airplane object.
+        Spanwise distributions are returned in mesh order; sort by 'spanwise_y' before plotting if desired. They use
+        projected-y widths, so they are intended for wings and tails with nonzero spanwise y extent.
+        The per-wing 'y', 'cl', and 'clc_over_cref' lists are already ordered for plotting.
         """
 
         if self.verbose:
@@ -142,8 +166,12 @@ class VortexLatticeMethod(ExplicitAnalysis):
         back_right_vertices = []
         front_right_vertices = []
         is_trailing_edge = []
+        panel_wing_indices = []
+        panel_side_indices = []
+        panel_spanwise_indices = []
+        panel_chordwise_indices = []
 
-        for wing in self.airplane.wings:
+        for wing_index, wing in enumerate(self.airplane.wings):
             if self.spanwise_resolution > 1:
                 wing = wing.subdivide_sections(
                     ratio=self.spanwise_resolution,
@@ -164,11 +192,45 @@ class VortexLatticeMethod(ExplicitAnalysis):
                 (np.arange(len(faces)) + 1) % self.chordwise_resolution == 0
             )
 
+            n_spanwise_panels = len(wing.xsecs) - 1
+            n_chordwise_panels = self.chordwise_resolution
+            n_panels_one_side = n_spanwise_panels * n_chordwise_panels
+            spanwise_indices_one_side = np.repeat(
+                np.arange(n_spanwise_panels), n_chordwise_panels
+            )
+            chordwise_indices_one_side = np.tile(
+                np.arange(n_chordwise_panels), n_spanwise_panels
+            )
+
+            if wing.symmetric:
+                side_indices = np.concatenate(
+                    [np.ones(n_panels_one_side), -np.ones(n_panels_one_side)]
+                )
+                spanwise_indices = np.concatenate(
+                    [spanwise_indices_one_side, spanwise_indices_one_side]
+                )
+                chordwise_indices = np.concatenate(
+                    [chordwise_indices_one_side, chordwise_indices_one_side]
+                )
+            else:
+                side_indices = np.ones(n_panels_one_side)
+                spanwise_indices = spanwise_indices_one_side
+                chordwise_indices = chordwise_indices_one_side
+
+            panel_wing_indices.append(np.ones(len(faces)) * wing_index)
+            panel_side_indices.append(side_indices)
+            panel_spanwise_indices.append(spanwise_indices)
+            panel_chordwise_indices.append(chordwise_indices)
+
         front_left_vertices = np.concatenate(front_left_vertices)
         back_left_vertices = np.concatenate(back_left_vertices)
         back_right_vertices = np.concatenate(back_right_vertices)
         front_right_vertices = np.concatenate(front_right_vertices)
         is_trailing_edge = np.concatenate(is_trailing_edge)
+        panel_wing_indices = np.concatenate(panel_wing_indices)
+        panel_side_indices = np.concatenate(panel_side_indices)
+        panel_spanwise_indices = np.concatenate(panel_spanwise_indices)
+        panel_chordwise_indices = np.concatenate(panel_chordwise_indices)
 
         ### Compute panel statistics
         diag1 = front_right_vertices - back_left_vertices
@@ -183,6 +245,10 @@ class VortexLatticeMethod(ExplicitAnalysis):
         right_vortex_vertices = 0.75 * front_right_vertices + 0.25 * back_right_vertices
         vortex_centers = (left_vortex_vertices + right_vortex_vertices) / 2
         vortex_bound_leg = right_vortex_vertices - left_vortex_vertices
+        chord_vectors = (back_left_vertices + back_right_vertices) / 2 - (
+            front_left_vertices + front_right_vertices
+        ) / 2
+        panel_chords = np.linalg.norm(chord_vectors, axis=1)
         collocation_points = 0.5 * (
             0.25 * front_left_vertices + 0.75 * back_left_vertices
         ) + 0.5 * (0.25 * front_right_vertices + 0.75 * back_right_vertices)
@@ -199,7 +265,13 @@ class VortexLatticeMethod(ExplicitAnalysis):
         self.right_vortex_vertices = right_vortex_vertices
         self.vortex_centers = vortex_centers
         self.vortex_bound_leg = vortex_bound_leg
+        self.chord_vectors = chord_vectors
+        self.panel_chords = panel_chords
         self.collocation_points = collocation_points
+        self.panel_wing_indices = panel_wing_indices
+        self.panel_side_indices = panel_side_indices
+        self.panel_spanwise_indices = panel_spanwise_indices
+        self.panel_chordwise_indices = panel_chordwise_indices
 
         ##### Setup Operating Point
         if self.verbose:
@@ -353,7 +425,132 @@ class VortexLatticeMethod(ExplicitAnalysis):
         Cm = m_b / q / s_ref / c_ref
         Cn = n_b / q / s_ref / b_ref
 
-        return {
+        panel_forces_wind = self.op_point.convert_axes(
+            forces_geometry[:, 0],
+            forces_geometry[:, 1],
+            forces_geometry[:, 2],
+            from_axes="geometry",
+            to_axes="wind",
+        )
+        panel_lifts = -panel_forces_wind[2]
+        panel_dys = np.abs(right_vortex_vertices[:, 1] - left_vortex_vertices[:, 1])
+
+        spanwise_y = []
+        spanwise_dy = []
+        spanwise_chord = []
+        spanwise_lift = []
+        spanwise_wing_index = []
+        spanwise_side = []
+        spanwise_spanwise_index = []
+        seen_spanwise_keys = set()
+
+        panel_metadata = list(
+            zip(panel_wing_indices, panel_side_indices, panel_spanwise_indices)
+        )
+
+        for wing_index, side, spanwise_index in panel_metadata:
+            key = (int(wing_index), int(side), int(spanwise_index))
+            if key in seen_spanwise_keys:
+                continue
+            seen_spanwise_keys.add(key)
+
+            indices = [
+                i
+                for i, metadata in enumerate(panel_metadata)
+                if (int(metadata[0]), int(metadata[1]), int(metadata[2])) == key
+            ]
+
+            spanwise_y.append(
+                np.mean(np.array([vortex_centers[i, 1] for i in indices]))
+            )
+            spanwise_dy.append(np.mean(np.array([panel_dys[i] for i in indices])))
+            spanwise_chord.append(
+                np.sum(np.array([panel_chords[i] for i in indices]))
+            )
+            spanwise_lift.append(np.sum(np.array([panel_lifts[i] for i in indices])))
+            spanwise_wing_index.append(key[0])
+            spanwise_side.append(key[1])
+            spanwise_spanwise_index.append(key[2])
+
+        spanwise_y = np.array(spanwise_y)
+        spanwise_dy = np.array(spanwise_dy)
+        spanwise_chord = np.array(spanwise_chord)
+        spanwise_lift = np.array(spanwise_lift)
+        spanwise_lift_per_y = spanwise_lift / spanwise_dy
+        spanwise_cl = spanwise_lift_per_y / q / spanwise_chord
+        spanwise_clc_over_cref = spanwise_lift_per_y / q / c_ref
+        spanwise_wing_index = np.array(spanwise_wing_index)
+        spanwise_side = np.array(spanwise_side)
+        spanwise_spanwise_index = np.array(spanwise_spanwise_index)
+
+        def get_wing_indices(wing_index):
+            indices = []
+            for side in [-1, 1]:
+                side_indices = [
+                    i
+                    for i, (this_wing_index, this_side) in enumerate(
+                        zip(spanwise_wing_index, spanwise_side)
+                    )
+                    if this_wing_index == wing_index and this_side == side
+                ]
+                side_indices = sorted(
+                    side_indices,
+                    key=lambda i: spanwise_spanwise_index[i],
+                    reverse=side == -1,
+                )
+                indices.extend(side_indices)
+            return indices
+
+        wing_indices = [
+            get_wing_indices(wing_index) for wing_index in range(len(self.airplane.wings))
+        ]
+        y = [
+            np.array([spanwise_y[i] for i in indices])
+            for indices in wing_indices
+        ]
+        dy = [
+            np.array([spanwise_dy[i] for i in indices])
+            for indices in wing_indices
+        ]
+        chord = [
+            np.array([spanwise_chord[i] for i in indices])
+            for indices in wing_indices
+        ]
+        lift = [
+            np.array([spanwise_lift[i] for i in indices])
+            for indices in wing_indices
+        ]
+        lift_per_y = [
+            np.array([spanwise_lift_per_y[i] for i in indices])
+            for indices in wing_indices
+        ]
+        cl = [
+            np.array([spanwise_cl[i] for i in indices])
+            for indices in wing_indices
+        ]
+        clc_over_cref = [
+            np.array([spanwise_clc_over_cref[i] for i in indices])
+            for indices in wing_indices
+        ]
+
+        self.spanwise_y = spanwise_y
+        self.spanwise_dy = spanwise_dy
+        self.spanwise_chord = spanwise_chord
+        self.spanwise_lift = spanwise_lift
+        self.spanwise_lift_per_y = spanwise_lift_per_y
+        self.spanwise_cl = spanwise_cl
+        self.spanwise_clc_over_cref = spanwise_clc_over_cref
+        self.spanwise_wing_index = spanwise_wing_index
+        self.spanwise_side = spanwise_side
+        self.y = y
+        self.dy = dy
+        self.chord = chord
+        self.lift = lift
+        self.lift_per_y = lift_per_y
+        self.cl = cl
+        self.clc_over_cref = clc_over_cref
+
+        output = {
             "F_g": force_geometry,
             "F_b": force_body,
             "F_w": force_wind,
@@ -372,7 +569,25 @@ class VortexLatticeMethod(ExplicitAnalysis):
             "Cl": Cl,
             "Cm": Cm,
             "Cn": Cn,
+            "spanwise_y": spanwise_y,
+            "spanwise_dy": spanwise_dy,
+            "spanwise_chord": spanwise_chord,
+            "spanwise_lift": spanwise_lift,
+            "spanwise_lift_per_y": spanwise_lift_per_y,
+            "spanwise_cl": spanwise_cl,
+            "spanwise_clc_over_cref": spanwise_clc_over_cref,
+            "spanwise_wing_index": spanwise_wing_index,
+            "spanwise_side": spanwise_side,
+            "y": y,
+            "dy": dy,
+            "chord": chord,
+            "lift": lift,
+            "lift_per_y": lift_per_y,
+            "cl": cl,
+            "clc_over_cref": clc_over_cref,
         }
+        self.output = output
+        return output
 
     def run_with_stability_derivatives(
         self,
