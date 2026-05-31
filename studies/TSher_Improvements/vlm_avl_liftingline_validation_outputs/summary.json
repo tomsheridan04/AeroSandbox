@@ -1,0 +1,108 @@
+{
+  "VLM_force_max_abs_error": {
+    "CL": 0.018213923197360093,
+    "CD": 0.005030920833087867,
+    "CY": 0.014680096551853126,
+    "Cl": 0.0011353520294022437,
+    "Cm": 0.08452468848346842,
+    "Cn": 0.006656147790786422
+  },
+  "VLM_force_max_rel_error": {
+    "CL": 4.296663318711248,
+    "CD": 2.1227514063661888,
+    "CY": 0.5530652164404183,
+    "Cl": 0.10600859284801528,
+    "Cm": 0.7308145036264241,
+    "Cn": 0.6226518045637439
+  },
+  "VLM_derivative_max_abs_error": 0.7251124536481299,
+  "VLM_derivative_max_rel_error": 747575956.081193,
+  "VLM_worst_derivative_abs_error": {
+    "case": "neutral",
+    "method": "VLM",
+    "reference": "AVL",
+    "derivative": "Cmq",
+    "value": -19.23128445364813,
+    "reference_value": -18.506172,
+    "abs_error": -0.7251124536481299,
+    "rel_error": 0.03918219573708328
+  },
+  "LiftingLine_force_max_abs_error": {
+    "CL": 0.26368729454575845,
+    "CD": 0.035952803277464085,
+    "CY": 0.010323525460000486,
+    "Cl": 0.028254315552587093,
+    "Cm": 0.5070761132401045,
+    "Cn": 0.004524276796283321
+  },
+  "LiftingLine_force_max_rel_error": {
+    "CL": 4.42429685125875,
+    "CD": 40.07372937822592,
+    "CY": 1.0815834035744485,
+    "Cl": 0.9983857085719822,
+    "Cm": 1.1560715727511388,
+    "Cn": 0.9750596543714054
+  },
+  "LiftingLine_derivative_max_abs_error": 18.48659411828601,
+  "LiftingLine_derivative_max_rel_error": 8281696.848992822,
+  "LiftingLine_worst_derivative_abs_error": {
+    "case": "design",
+    "method": "LiftingLine",
+    "reference": "AVL",
+    "derivative": "Cmq",
+    "value": -0.03473588171398756,
+    "reference_value": -18.52133,
+    "abs_error": 18.48659411828601,
+    "rel_error": 0.998124547118701
+  },
+  "horizontal_distribution_checks_pass": true,
+  "metadata": {
+    "cg_fraction_mac": 0.28,
+    "xyz_ref": [
+      0.4907421358174329,
+      0.0,
+      0.1401316016656464
+    ],
+    "s_ref": 11.151325522115505,
+    "c_ref": 1.166903837207412,
+    "b_ref": 10.025780270667946,
+    "main_wing_mac_le": [
+      0.1640090613993575,
+      0.0,
+      0.1401316016656464
+    ],
+    "wing_names": [
+      "Main Wing",
+      "Horizontal Tail",
+      "Vertical Tail"
+    ]
+  },
+  "cg_audit": {
+    "avl_file": "C:\\Users\\tsher\\OneDrive\\Documents\\Aircraft_Design\\Github\\AeroSandbox\\studies\\TSher_Improvements\\vlm_avl_liftingline_validation_outputs\\avl_work\\airplane.avl",
+    "xref_values": [
+      0.4907421358174329,
+      0.0,
+      0.1401316016656464
+    ],
+    "expected_xyz_ref": [
+      0.4907421358174329,
+      0.0,
+      0.1401316016656464
+    ],
+    "errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "max_abs_error": 0.0
+  },
+  "shifted_cg_moment_check": {
+    "dx": 0.11669038372074121,
+    "base_Cm": -0.06899895441525282,
+    "shifted_Cm": -0.03282709094749936,
+    "actual_delta_Cm": 0.03617186346775346,
+    "expected_delta_Cm": 0.03617186346775349,
+    "abs_error": -2.7755575615628914e-17
+  },
+  "lift_distribution_plot": "C:\\Users\\tsher\\OneDrive\\Documents\\Aircraft_Design\\Github\\AeroSandbox\\studies\\TSher_Improvements\\vlm_avl_liftingline_validation_outputs\\lift_distributions.png"
+}

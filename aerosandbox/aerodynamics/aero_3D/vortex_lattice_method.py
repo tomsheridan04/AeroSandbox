@@ -283,7 +283,9 @@ class VortexLatticeMethod(ExplicitAnalysis):
             steady_freestream_velocity
         )
         rotation_freestream_velocities = (
-            self.op_point.compute_rotation_velocity_geometry_axes(collocation_points)
+            self.op_point.compute_rotation_velocity_geometry_axes(
+                collocation_points - self.xyz_ref
+            )
         )
 
         freestream_velocities = np.add(
@@ -476,7 +478,8 @@ class VortexLatticeMethod(ExplicitAnalysis):
         spanwise_dy = np.array(spanwise_dy)
         spanwise_chord = np.array(spanwise_chord)
         spanwise_lift = np.array(spanwise_lift)
-        spanwise_lift_per_y = spanwise_lift / spanwise_dy
+        safe_spanwise_dy = np.where(spanwise_dy == 0, np.nan, spanwise_dy)
+        spanwise_lift_per_y = spanwise_lift / safe_spanwise_dy
         spanwise_cl = spanwise_lift_per_y / q / spanwise_chord
         spanwise_clc_over_cref = spanwise_lift_per_y / q / c_ref
         spanwise_wing_index = np.array(spanwise_wing_index)
@@ -798,7 +801,9 @@ class VortexLatticeMethod(ExplicitAnalysis):
         V_induced = self.get_induced_velocity_at_points(points)
 
         rotation_freestream_velocities = (
-            self.op_point.compute_rotation_velocity_geometry_axes(points)
+            self.op_point.compute_rotation_velocity_geometry_axes(
+                points - self.xyz_ref
+            )
         )
 
         freestream_velocities = np.add(

@@ -735,7 +735,9 @@ class LiftingLine(ExplicitAnalysis):
         )
 
         rotation_freestream_velocities = (
-            self.op_point.compute_rotation_velocity_geometry_axes(points=vortex_centers)
+            self.op_point.compute_rotation_velocity_geometry_axes(
+                points=vortex_centers - self.xyz_ref
+            )
         )
 
         freestream_velocities = (
@@ -938,7 +940,8 @@ class LiftingLine(ExplicitAnalysis):
         )
         spanwise_lift = -forces_inviscid_wind[2]
         spanwise_dy = np.abs(right_vortex_vertices[:, 1] - left_vortex_vertices[:, 1])
-        spanwise_lift_per_y = spanwise_lift / spanwise_dy
+        safe_spanwise_dy = np.where(spanwise_dy == 0, np.nan, spanwise_dy)
+        spanwise_lift_per_y = spanwise_lift / safe_spanwise_dy
         spanwise_cl = spanwise_lift_per_y / self.op_point.dynamic_pressure() / chords
         spanwise_clc_over_cref = (
             spanwise_lift_per_y / self.op_point.dynamic_pressure() / self.airplane.c_ref
@@ -1129,7 +1132,7 @@ class LiftingLine(ExplicitAnalysis):
         )
 
         rotation_freestream_velocities = np.array(
-            self.op_point.compute_rotation_velocity_geometry_axes(points)
+            self.op_point.compute_rotation_velocity_geometry_axes(points - self.xyz_ref)
         )
 
         freestream_velocities = np.add(

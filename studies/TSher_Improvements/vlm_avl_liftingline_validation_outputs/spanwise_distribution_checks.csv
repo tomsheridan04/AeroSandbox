@@ -1,0 +1,7 @@
+method,wing,has_projected_y_span,n_strips,finite_horizontal_lift_distribution,max_abs_lift,max_abs_clc_over_cref,clc_over_cref_spike_ratio,sum_lift
+VLM,Main Wing,True,48,True,207.70162323906504,0.47346929639832525,1.3606750284669162,4709.29256173668
+VLM,Horizontal Tail,True,24,True,21.43094354465648,0.08590163578125232,1.11833058400979,300.8848575994337
+VLM,Vertical Tail,False,12,True,3.6310999091920044e-31,nan,nan,-2.5005068876017028e-31
+LiftingLine,Main Wing,True,48,True,220.5997788984909,0.5071385454509,1.4103952009354808,4995.788896756812
+LiftingLine,Horizontal Tail,True,24,True,20.74113349211081,0.0827002316600106,1.1057637755168515,298.9080871595955
+LiftingLine,Vertical Tail,False,12,True,5.189111093436434e-31,nan,nan,-1.803532522893762e-30

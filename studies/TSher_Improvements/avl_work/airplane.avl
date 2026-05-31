@@ -1,0 +1,163 @@
+Peter's Glider
+#Mach
+0        ! AeroSandbox note: This is overwritten later to match the current OperatingPoint Mach during the AVL run.
+#IYsym   IZsym   Zsym
+0       0   0
+#Sref    Cref    Bref
+0.29237742155477453 0.1510464169994095 2.019809790962264
+#Xref    Yref    Zref
+0 0 0
+# CDp
+0
+#===============================================================================
+SURFACE
+Main Wing
+#Nchordwise  Cspace  [Nspanwise   Sspace]
+12   1   12   1
+
+YDUPLICATE
+0
+
+CDCL
+#CL1  CD1  CL2  CD2  CL3  CD3
+0 0 0 0 0 0
+
+#--------------------------------------------------
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  [Nspanwise   Sspace]
+0 0 0 0.18 2
+
+AFIL
+studies\TSher_Improvements\avl_work\airplane.avl.af0
+
+CLAF
+1.0708311908930026  # Computed using rule from avl_doc.txt
+
+CDCL
+#CL1  CD1  CL2  CD2  CL3  CD3
+0 0 0 0 0 0
+
+#--------------------------------------------------
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  [Nspanwise   Sspace]
+0.01 0.5 0 0.16 0
+
+AFIL
+studies\TSher_Improvements\avl_work\airplane.avl.af1
+
+CLAF
+1.0708311908930026  # Computed using rule from avl_doc.txt
+
+CDCL
+#CL1  CD1  CL2  CD2  CL3  CD3
+0 0 0 0 0 0
+
+#--------------------------------------------------
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  [Nspanwise   Sspace]
+0.08 1 0.1 0.08 -2
+
+AFIL
+studies\TSher_Improvements\avl_work\airplane.avl.af2
+
+CLAF
+1.0708311908930026  # Computed using rule from avl_doc.txt
+
+CDCL
+#CL1  CD1  CL2  CD2  CL3  CD3
+0 0 0 0 0 0
+
+#===============================================================================
+SURFACE
+Horizontal Stabilizer
+#Nchordwise  Cspace  [Nspanwise   Sspace]
+12   1   12   1
+
+YDUPLICATE
+0
+
+CDCL
+#CL1  CD1  CL2  CD2  CL3  CD3
+0 0 0 0 0 0
+
+#--------------------------------------------------
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  [Nspanwise   Sspace]
+0.6 0 0.06 0.1 -10
+
+AFIL
+studies\TSher_Improvements\avl_work\airplane.avl.af3
+
+CLAF
+1.0770184378795808  # Computed using rule from avl_doc.txt
+
+CDCL
+#CL1  CD1  CL2  CD2  CL3  CD3
+0 0 0 0 0 0
+
+#--------------------------------------------------
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  [Nspanwise   Sspace]
+0.62 0.17 0.06 0.08 -10
+
+AFIL
+studies\TSher_Improvements\avl_work\airplane.avl.af4
+
+CLAF
+1.0770184378795808  # Computed using rule from avl_doc.txt
+
+CDCL
+#CL1  CD1  CL2  CD2  CL3  CD3
+0 0 0 0 0 0
+
+#===============================================================================
+SURFACE
+Vertical Stabilizer
+#Nchordwise  Cspace  [Nspanwise   Sspace]
+12   1   12   1
+
+CDCL
+#CL1  CD1  CL2  CD2  CL3  CD3
+0 0 0 0 0 0
+
+#--------------------------------------------------
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  [Nspanwise   Sspace]
+0.6 0 0.07 0.1 0
+
+AFIL
+studies\TSher_Improvements\avl_work\airplane.avl.af5
+
+CLAF
+1.0770184378795808  # Computed using rule from avl_doc.txt
+
+CDCL
+#CL1  CD1  CL2  CD2  CL3  CD3
+0 0 0 0 0 0
+
+#--------------------------------------------------
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  [Nspanwise   Sspace]
+0.64 0 0.22 0.06 0
+
+AFIL
+studies\TSher_Improvements\avl_work\airplane.avl.af6
+
+CLAF
+1.0770184378795808  # Computed using rule from avl_doc.txt
+
+CDCL
+#CL1  CD1  CL2  CD2  CL3  CD3
+0 0 0 0 0 0
+
+#==================================================
+BODY
+Fuselage
+24 1
+
+BFIL
+studies\TSher_Improvements\avl_work\airplane.avl.fuse0
+
+TRANSLATE
+0 0 0
+

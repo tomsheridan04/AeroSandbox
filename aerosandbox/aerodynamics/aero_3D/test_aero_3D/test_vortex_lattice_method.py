@@ -158,6 +158,35 @@ def test_vlm_spanwise_lift_distribution_supports_opti_variables():
     assert np.isfinite(sol(aero["cl"][0][0]))
 
 
+def test_vlm_rate_response_is_invariant_to_geometry_translation():
+    airplane = _rectangular_wing_airplane()
+    translated_airplane = asb.Airplane(
+        name="Translated",
+        xyz_ref=np.array([10.25, 0, 0]),
+        wings=[wing.translate([10, 0, 0]) for wing in airplane.wings],
+        s_ref=airplane.s_ref,
+        c_ref=airplane.c_ref,
+        b_ref=airplane.b_ref,
+    )
+    airplane.xyz_ref = np.array([0.25, 0, 0])
+
+    op_point = asb.OperatingPoint(velocity=10, alpha=4, q=1.0)
+    kwargs = dict(
+        op_point=op_point,
+        spanwise_resolution=3,
+        chordwise_resolution=3,
+    )
+
+    baseline = asb.VortexLatticeMethod(airplane=airplane, **kwargs).run()
+    translated = asb.VortexLatticeMethod(
+        airplane=translated_airplane,
+        **kwargs,
+    ).run()
+
+    for key in ["CL", "CD", "CY", "Cl", "Cm", "Cn"]:
+        assert translated[key] == pytest.approx(baseline[key], abs=1e-12)
+
+
 if __name__ == "__main__":
     # test_conventional()
     # test_vanilla()
