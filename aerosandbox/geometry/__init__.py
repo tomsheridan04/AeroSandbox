@@ -4,4 +4,5 @@ from aerosandbox.geometry.wing import Wing, WingXSec, ControlSurface
 from aerosandbox.geometry.fuselage import Fuselage, FuselageXSec
 from aerosandbox.geometry.airplane import Airplane
 from aerosandbox.geometry.propulsor import Propulsor
+from aerosandbox.geometry.propeller import Propeller
 import aerosandbox.geometry.mesh_utilities as mesh_utils
