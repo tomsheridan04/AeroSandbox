@@ -19,7 +19,7 @@ import aerosandbox as asb
 import aerosandbox.numpy as np
 
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = next(p for p in Path(__file__).resolve().parents if (p / "aerosandbox/__init__.py").is_file())
 STUDY_DIR = Path(__file__).resolve().parent
 AVL_EXE = STUDY_DIR / "avl352.exe"
 OUTPUT_DIR = STUDY_DIR / "vlm_avl_liftingline_validation_outputs"

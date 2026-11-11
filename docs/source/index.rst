@@ -20,6 +20,7 @@ AeroSandbox also comes with dozens of end-to-end-differentiable aerospace physic
 .. toctree::
    :maxdepth: 10
 
+   normal_flow_lifting_line
 
 
 Indices and tables

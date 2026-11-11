@@ -736,7 +736,7 @@ class LiftingLine(ExplicitAnalysis):
 
         rotation_freestream_velocities = (
             self.op_point.compute_rotation_velocity_geometry_axes(
-                points=vortex_centers - self.xyz_ref
+                points=np.add(vortex_centers, -wide(np.array(self.xyz_ref)))
             )
         )
 
@@ -1132,7 +1132,9 @@ class LiftingLine(ExplicitAnalysis):
         )
 
         rotation_freestream_velocities = np.array(
-            self.op_point.compute_rotation_velocity_geometry_axes(points - self.xyz_ref)
+            self.op_point.compute_rotation_velocity_geometry_axes(
+                np.add(points, -wide(np.array(self.xyz_ref)))
+            )
         )
 
         freestream_velocities = np.add(

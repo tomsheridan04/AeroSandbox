@@ -1,0 +1,168 @@
+{
+  "findings": {
+    "selected_variant": "Normal flow, NF attached + 4",
+    "selected_options": {
+      "kinematics": "normal",
+      "slope_model": "attached",
+      "circulation_corrections": 4
+    },
+    "practical_variant": "Normal flow, NF attached + 2",
+    "practical_options": {
+      "kinematics": "normal",
+      "slope_model": "attached",
+      "circulation_corrections": 2
+    },
+    "flying_wing_lift_RMSE_change_percent": -43.044060531512386,
+    "flying_wing_common_drag_RMSE_change_percent": -35.884348635357114,
+    "runtime_ratio_to_original": 3.130905741344894,
+    "flying_wing_CLmax_error": null,
+    "CLmax_note": "Flying-wing digitization does not resolve an experimental peak; use Clark Y peak tables separately.",
+    "clark_y_yawed_peak_comparison": [
+      {
+        "variant": "Original LiftingLine",
+        "predicted_peak_CL": 0.9581221956887362,
+        "sampled_peak_error": -0.2358778043112637
+      },
+      {
+        "variant": "0.8 x 2pi, no correction",
+        "predicted_peak_CL": 1.0027437833325985,
+        "sampled_peak_error": -0.19125621666740145
+      },
+      {
+        "variant": "NF attached slope, no correction",
+        "predicted_peak_CL": 0.9505934738179144,
+        "sampled_peak_error": -0.24340652618208558
+      },
+      {
+        "variant": "NF local slope, no correction",
+        "predicted_peak_CL": 1.1912418805061722,
+        "sampled_peak_error": -0.0027581194938277598
+      },
+      {
+        "variant": "2pi + 2 corrections",
+        "predicted_peak_CL": 1.135825736718466,
+        "sampled_peak_error": -0.058174263281533856
+      },
+      {
+        "variant": "NF attached + 2 corrections",
+        "predicted_peak_CL": 1.1343297269878079,
+        "sampled_peak_error": -0.05967027301219208
+      },
+      {
+        "variant": "NF local + 2 corrections",
+        "predicted_peak_CL": 1.1546370715167245,
+        "sampled_peak_error": -0.039362928483275494
+      },
+      {
+        "variant": "Normal flow, NF attached + 2",
+        "predicted_peak_CL": 1.1973020629219224,
+        "sampled_peak_error": 0.0033020629219224773
+      },
+      {
+        "variant": "Normal flow, NF attached + 4",
+        "predicted_peak_CL": 1.2292907850995147,
+        "sampled_peak_error": 0.035290785099514776
+      }
+    ],
+    "clark_y_zero_yaw_peak_comparison": [
+      {
+        "variant": "Original LiftingLine",
+        "predicted_peak_CL": 1.0826348169862439,
+        "peak_alpha": 12.0,
+        "measured_CLmax": 1.24,
+        "CLmax_error": -0.15736518301375613,
+        "resolved_interior_peak": true,
+        "measured_CDmin": 0.0151,
+        "predicted_CDmin": 0.01764136240114783
+      },
+      {
+        "variant": "Normal flow, NF attached + 4",
+        "predicted_peak_CL": 1.3996651064296888,
+        "peak_alpha": 16.0,
+        "measured_CLmax": 1.24,
+        "CLmax_error": 0.15966510642968879,
+        "resolved_interior_peak": true,
+        "measured_CDmin": 0.0151,
+        "predicted_CDmin": 0.016927542367922113
+      },
+      {
+        "variant": "Normal flow, NF attached + 2",
+        "predicted_peak_CL": 1.362270137510679,
+        "peak_alpha": 15.0,
+        "measured_CLmax": 1.24,
+        "CLmax_error": 0.12227013751067894,
+        "resolved_interior_peak": true,
+        "measured_CDmin": 0.0151,
+        "predicted_CDmin": 0.0169463341048256
+      }
+    ],
+    "practical_lift_RMSE_change_percent": -42.64529204802977,
+    "practical_common_drag_RMSE_change_percent": -35.898429489662234,
+    "practical_runtime_ratio_to_original": 2.1471088643741707
+  },
+  "variants": {
+    "Original LiftingLine": null,
+    "0.8 x 2pi, no correction": {
+      "slope_model": "two_pi",
+      "slope_scale": 0.8,
+      "circulation_corrections": 0
+    },
+    "NF attached slope, no correction": {
+      "slope_model": "attached",
+      "circulation_corrections": 0
+    },
+    "NF local slope, no correction": {
+      "slope_model": "local",
+      "circulation_corrections": 0
+    },
+    "2pi + 2 corrections": {
+      "slope_model": "two_pi",
+      "circulation_corrections": 2
+    },
+    "NF attached + 2 corrections": {
+      "slope_model": "attached",
+      "circulation_corrections": 2
+    },
+    "NF local + 2 corrections": {
+      "slope_model": "local",
+      "circulation_corrections": 2
+    },
+    "Normal flow, NF attached + 2": {
+      "kinematics": "normal",
+      "slope_model": "attached",
+      "circulation_corrections": 2
+    },
+    "Normal flow, NF attached + 4": {
+      "kinematics": "normal",
+      "slope_model": "attached",
+      "circulation_corrections": 4
+    }
+  },
+  "spanwise_resolution": 12,
+  "neuralfoil_model_size": "medium",
+  "packages": {
+    "aerosandbox": "4.2.8",
+    "neuralfoil": "0.3.2",
+    "casadi": "3.7.2",
+    "numpy": "2.3.5"
+  },
+  "source_hashes": {
+    "studies\\TSher_Improvements\\lifting_line_corrections.py": "3daf0221ec66c5a7776898a26568279bcd166f719f228b3d5d45a9b9d5f55f0b",
+    "studies\\TSher_Improvements\\lifting_line_correction_study.py": "04b65b55380d1ed57829d809e2f769aab4ffaf71caf20e7986df8a56fc7ab074",
+    "tutorial\\06 - Aerodynamics\\01 - AeroSandbox 3D Aerodynamics Tools\\assets\\NACA-RM-A50K27.xlsx": "b420f7c65390971a29f104688e112a845a650e0a5284d1292ffa891d4302cfb2",
+    "tutorial\\06 - Aerodynamics\\01 - AeroSandbox 3D Aerodynamics Tools\\assets\\n64_1_A612.dat": "80a00407f7f6dd0aabe2c0a42b54cb2a905b74f967df4a17fda32522a775844c",
+    "aerosandbox\\aerodynamics\\aero_3D\\lifting_line.py": "19274acaf14f34ce3a0b53617a1b02bb5cd2dedf1185fce663731d3a9401804c",
+    "studies\\TSher_Improvements\\lifting_line_correction_data\\clark_y_ar6_yaw_minus20.csv": "72b906671e3d4a385bdbb4952d66055b075d44355498a97930906e3547df3eba",
+    "studies\\TSher_Improvements\\lifting_line_correction_data\\clark_y_published_ordinates.csv": "7cf1129bb78aef32e48b5736076b0af7060ba1b70b107a1597cd839c71690697",
+    "studies\\TSher_Improvements\\lifting_line_correction_data\\naca-tr-431.pdf": "4e3d2ef104e55afa7cad0e25e412aefeac3ef8a0d774d1e363a420c6448e2ea2",
+    "studies\\TSher_Improvements\\lifting_line_correction_data\\README.md": "5705d3c14275091319ce7ee9ab7d7e7447ffe524df1356e5e0351ea8612f5fe8",
+    "studies\\TSher_Improvements\\lifting_line_correction_data\\sources.json": "a4eaf667353ba1a75c3215374792049db06462eac23a72075a3ca94c1c53182d"
+  },
+  "thread_environment": {
+    "OMP_NUM_THREADS": null,
+    "OPENBLAS_NUM_THREADS": null,
+    "MKL_NUM_THREADS": null
+  },
+  "git_head": "fd7aaae6680039d5e757cb32f0641bbd51ec2eed",
+  "authorship": "Generated with Codex; human review outstanding"
+}

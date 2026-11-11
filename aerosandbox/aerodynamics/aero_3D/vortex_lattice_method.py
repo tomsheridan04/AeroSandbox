@@ -284,7 +284,7 @@ class VortexLatticeMethod(ExplicitAnalysis):
         )
         rotation_freestream_velocities = (
             self.op_point.compute_rotation_velocity_geometry_axes(
-                collocation_points - self.xyz_ref
+                np.add(collocation_points, -wide(np.array(self.xyz_ref)))
             )
         )
 
@@ -802,7 +802,7 @@ class VortexLatticeMethod(ExplicitAnalysis):
 
         rotation_freestream_velocities = (
             self.op_point.compute_rotation_velocity_geometry_axes(
-                points - self.xyz_ref
+                np.add(points, -wide(np.array(self.xyz_ref)))
             )
         )
 

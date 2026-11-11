@@ -1,0 +1,4 @@
+variant,predicted_peak_CL,peak_alpha,measured_CLmax,CLmax_error,resolved_interior_peak,measured_CDmin,predicted_CDmin
+Original LiftingLine,1.0826348169862439,12.0,1.24,-0.15736518301375613,True,0.0151,0.01764136240114783
+"Normal flow, NF attached + 4",1.3996651064296888,16.0,1.24,0.15966510642968879,True,0.0151,0.016927542367922113
+"Normal flow, NF attached + 2",1.362270137510679,15.0,1.24,0.12227013751067894,True,0.0151,0.0169463341048256

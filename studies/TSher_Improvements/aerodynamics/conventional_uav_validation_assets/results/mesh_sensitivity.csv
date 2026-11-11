@@ -1,0 +1,13 @@
+method,alpha,status,error,CL_base,CL_refined,delta_CL,CD_base,CD_refined,delta_CD,seconds
+VLM (inviscid),7.0,ok,,0.5546851843804587,0.5454566400845227,-0.009228544295936003,0.018387156913942975,0.018733986209969883,0.00034682929602690774,0.6571638000023086
+VLM (inviscid),14.5,ok,,1.1242614604488652,1.1050563598528196,-0.019205100596045632,0.07560085547164638,0.07703831148582337,0.0014374560141769827,2.184091900009662
+LiftingLine,7.0,ok,,0.582496638835529,0.5685941736660344,-0.013902465169494671,0.058215743957461326,0.05349845396708167,-0.004717289990379653,1.6887921999732498
+LiftingLine,14.5,ok,,0.8142698673552565,0.7930808379858445,-0.021189029369412027,0.1584627072891735,0.15051851612912792,-0.007944191160045577,1.4727271999872755
+NonlinearLL,7.0,failed,"Error in Opti::solve [OptiNode] at .../casadi/core/optistack.cpp:217:
+.../casadi/core/optistack_internal.cpp:1338: Assertion ""return_success(accept_limit)"" failed:
+Solver failed. You may use opti.debug.value to investigate the latest values of variables. return_status is 'Maximum_CpuTime_Exceeded'",0.596315091684327,,,0.08623456906466216,,,96.53649159998167
+NonlinearLL,14.5,failed,"Error in Opti::solve [OptiNode] at .../casadi/core/optistack.cpp:217:
+.../casadi/core/optistack_internal.cpp:1338: Assertion ""return_success(accept_limit)"" failed:
+Solver failed. You may use opti.debug.value to investigate the latest values of variables. return_status is 'Maximum_CpuTime_Exceeded'",1.187997026121722,,,0.2885263173659733,,,92.49659970001085
+VortexLatticeViscous,7.0,failed,Nonfinite aerodynamic coefficients,,,,,,,1.7099359999992885
+VortexLatticeViscous,14.5,failed,Nonfinite aerodynamic coefficients,,,,,,,1.6042894999845885

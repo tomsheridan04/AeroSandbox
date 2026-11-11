@@ -1,0 +1,5 @@
+# Transient local work; published study results remain versioned.
+/tmp/
+**/tmp_noop/
+**/.ipynb_checkpoints/
+**/__pycache__/

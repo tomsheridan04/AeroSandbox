@@ -1,0 +1,6 @@
+# Preserve the downloaded bytes verified by sources.json on every platform.
+/FASER_Aero.mat -text
+/FASER_config.m -text
+/FASER_Aero_Lib.mdl -text
+/UltraStick120.avl -text
+/OpenFlightSim_LICENSE.md -text

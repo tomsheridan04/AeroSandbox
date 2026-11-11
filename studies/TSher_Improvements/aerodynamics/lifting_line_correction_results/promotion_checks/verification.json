@@ -1,0 +1,179 @@
+{
+  "date": "2026-11-11",
+  "public_analysis": "asb.NormalFlowLiftingLine",
+  "defaults": {
+    "circulation_corrections": 2,
+    "relaxation": 0.8,
+    "flow": "normal plane",
+    "slope": "NeuralFoil attached flow"
+  },
+  "regressions": [
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "Original LiftingLine",
+      "alpha": 4.0,
+      "max_absolute_coefficient_difference": 1.942890293094024e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "Original LiftingLine",
+      "alpha": 12.0,
+      "max_absolute_coefficient_difference": 2.7755575615628914e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "0.8 x 2pi, no correction",
+      "alpha": 4.0,
+      "max_absolute_coefficient_difference": 1.3877787807814457e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "0.8 x 2pi, no correction",
+      "alpha": 12.0,
+      "max_absolute_coefficient_difference": 2.7755575615628914e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "NF attached slope, no correction",
+      "alpha": 4.0,
+      "max_absolute_coefficient_difference": 3.3306690738754696e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "NF attached slope, no correction",
+      "alpha": 12.0,
+      "max_absolute_coefficient_difference": 4.440892098500626e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "NF local slope, no correction",
+      "alpha": 4.0,
+      "max_absolute_coefficient_difference": 1.1102230246251565e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "NF local slope, no correction",
+      "alpha": 12.0,
+      "max_absolute_coefficient_difference": 1.3322676295501878e-15
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "2pi + 2 corrections",
+      "alpha": 4.0,
+      "max_absolute_coefficient_difference": 1.1102230246251565e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "2pi + 2 corrections",
+      "alpha": 12.0,
+      "max_absolute_coefficient_difference": 3.0531133177191805e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "NF attached + 2 corrections",
+      "alpha": 4.0,
+      "max_absolute_coefficient_difference": 3.885780586188048e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "NF attached + 2 corrections",
+      "alpha": 12.0,
+      "max_absolute_coefficient_difference": 3.3306690738754696e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "NF local + 2 corrections",
+      "alpha": 4.0,
+      "max_absolute_coefficient_difference": 1.3877787807814457e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "NF local + 2 corrections",
+      "alpha": 12.0,
+      "max_absolute_coefficient_difference": 5.551115123125783e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "Normal flow, NF attached + 2",
+      "alpha": 4.0,
+      "max_absolute_coefficient_difference": 2.220446049250313e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "Normal flow, NF attached + 2",
+      "alpha": 12.0,
+      "max_absolute_coefficient_difference": 2.498001805406602e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "Normal flow, NF attached + 4",
+      "alpha": 4.0,
+      "max_absolute_coefficient_difference": 1.1102230246251565e-16
+    },
+    {
+      "dataset": "flying_wing_predictions.csv",
+      "variant": "Normal flow, NF attached + 4",
+      "alpha": 12.0,
+      "max_absolute_coefficient_difference": 1.249000902703301e-16
+    },
+    {
+      "dataset": "clark_y_yaw20_predictions.csv",
+      "variant": "Normal flow, NF attached + 2",
+      "alpha": 14.3,
+      "max_absolute_coefficient_difference": 2.220446049250313e-16
+    },
+    {
+      "dataset": "clark_y_yaw20_predictions.csv",
+      "variant": "Normal flow, NF attached + 2",
+      "alpha": 16.2,
+      "max_absolute_coefficient_difference": 2.7755575615628914e-17
+    },
+    {
+      "dataset": "clark_y_yaw20_predictions.csv",
+      "variant": "Normal flow, NF attached + 4",
+      "alpha": 14.3,
+      "max_absolute_coefficient_difference": 2.220446049250313e-16
+    },
+    {
+      "dataset": "clark_y_yaw20_predictions.csv",
+      "variant": "Normal flow, NF attached + 4",
+      "alpha": 16.2,
+      "max_absolute_coefficient_difference": 6.938893903907228e-17
+    }
+  ],
+  "maximum_coefficient_difference": 1.3322676295501878e-15,
+  "targeted_tests": {
+    "passed": 43,
+    "warnings": 14,
+    "notes": "Existing VLM tests return dictionaries and omit default airfoils."
+  },
+  "notebooks": {
+    "schemas_startup_and_compilation_checked": 13,
+    "restored_stash_outputs_preserved": 3,
+    "full_historical_optimizations_rerun": false
+  },
+  "documentation": "Focused guide and public API built with Sphinx -W",
+  "public_Opti_example": {
+    "alpha": 2.218182254533733,
+    "root_chord": 0.3749999971866967,
+    "span": 5.000000037505355,
+    "CL": 0.40816354655980197,
+    "CD": 0.016529587639871834,
+    "L": 149.99999999980767,
+    "D": 6.0746192717980065,
+    "Cm": -0.0020789732498796183
+  },
+  "sources": {
+    "aerosandbox/aerodynamics/aero_3D/normal_flow_lifting_line.py": "1f4ab89c83f5f769520fffa80e0818bcab42808792472572803f7f4797f94e8d",
+    "aerosandbox/aerodynamics/aero_3D/lifting_line.py": "98c3ce36098c76a7eb62afbc2465cecf5480fea3e7a6663e975ba94c8f96c172",
+    "aerosandbox/aerodynamics/aero_3D/vortex_lattice_method.py": "09aeb0c7a3806f56c7e35f4d073f91ff7bd9c157b0f697fbeb111ed29ef6b5e2",
+    "aerosandbox/aerodynamics/aero_3D/test_aero_3D/test_normal_flow_lifting_line.py": "f1c50dcd3b08771507ae7c38f2db7ea19d982854a811614c2f10fb2e9891af44",
+    "studies/TSher_Improvements/aerodynamics/lifting_line_corrections.py": "98df7a36f7652602a3e6b24ef4c15294e8cf0fd0fdcc0cd34cd8d87a88a3be2d",
+    "studies/TSher_Improvements/aerodynamics/lifting_line_correction_study.py": "9aebcc15c78416e0d0fd6061694b98cc3d6cadc4b65f62766ffad88a1b17b517"
+  },
+  "stash_ids_retained": [
+    "40af9402148dfdb6f19cf9ef7ef443f60a084d15",
+    "a1f106a76ab0981a8e8b33b007166846fca3847d"
+  ],
+  "review_status": "Automated checks and agent code review complete; human review still required for upstream."
+}

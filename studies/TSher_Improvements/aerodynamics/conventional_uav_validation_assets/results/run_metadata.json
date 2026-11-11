@@ -1,0 +1,65 @@
+{
+  "python": "3.13.9",
+  "thread_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "packages": {
+    "AeroSandbox": "4.2.8",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
+    "pandas": "2.3.3",
+    "matplotlib": "3.10.6",
+    "neuralfoil": "0.3.2",
+    "casadi": "3.7.2"
+  },
+  "aerosandbox_import_path": "C:\\Users\\tsher\\OneDrive\\Documents\\Aircraft_Design\\Github\\AeroSandbox\\aerosandbox\\__init__.py",
+  "git_head": "fd7aaae6680039d5e757cb32f0641bbd51ec2eed",
+  "tracked_changes": "M \"studies/TSher_Improvements/01 - Comparison and Validation - Flying Wing.ipynb\"\n M studies/TSher_Improvements/flying_wing_polars.pdf",
+  "source_hashes": {
+    "FASER_Aero.mat": "02128172ab5922a7c54f66e79ada4aae3327c121a9632281a9533a306aa05bd1",
+    "FASER_config.m": "2ac29160ffc7278b35f9ac62ca66506cf000487680f7cd94d3699721809bb204",
+    "FASER_Aero_Lib.mdl": "2b4a729c3ba65cdafc6bc397122f4afeaa099d55e5a65ba10d1eeb822016fbaa",
+    "UltraStick120.avl": "9bc972a173ca34586bbce0cb27a6616427ba86e755872dc4b513dc4ae1fd4a0b",
+    "OpenFlightSim_LICENSE.md": "508a77d2e7b51d98adeed32648ad124b7b30241a8e70b2e72c99f92d8e5874d1"
+  },
+  "settings": {
+    "velocity_m_s": 12.503751857896965,
+    "q_Pa": 95.76051796,
+    "altitude_m": 0,
+    "S_m2": 0.769237171,
+    "b_m": 1.917192,
+    "c_m": 0.433578,
+    "xyz_ref_m": [
+      0.469,
+      0.0,
+      0.053
+    ],
+    "alpha_deg": [
+      -3.0,
+      2.0,
+      7.0,
+      12.0,
+      13.75,
+      14.5,
+      15.25,
+      15.5,
+      17.0,
+      18.0,
+      19.5,
+      22.0
+    ],
+    "spanwise_resolution": 3,
+    "chordwise_resolution": 5,
+    "nonlinear_solver": {
+      "max_iter": 200,
+      "max_runtime_s": 45,
+      "hessian_approximation": "limited-memory",
+      "initialization": "previous successful circulation, ascending alpha"
+    },
+    "scope": "lifting surfaces only; no fitted offsets; proxy geometry"
+  },
+  "successes": 46,
+  "failures": 14
+}

@@ -1,0 +1,4 @@
+# Source checksums cover exact bytes, including line endings.
+/clark_y_ar6_yaw_minus20.csv -text
+/clark_y_published_ordinates.csv -text
+/naca-tr-431.pdf -text

@@ -1,0 +1,7 @@
+method,sampled_CL_max,alpha_deg,interpretation
+FASER archived baseline,1.0064712279366432,14.5,sampled interior peak
+AeroBuildup,1.25153428117101,18.0,no resolved interior peak; not CLmax
+VLM (inviscid),1.374697978292899,18.0,no lift-stall mechanism; not CLmax
+LiftingLine,0.8145361759108459,15.25,sampled interior peak
+NonlinearLL,1.3182210306211788,17.0,incomplete window; no CLmax claim
+VortexLatticeViscous,,,no solution

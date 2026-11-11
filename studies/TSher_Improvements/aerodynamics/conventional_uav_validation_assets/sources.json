@@ -1,0 +1,31 @@
+{
+  "retrieved_date": "2026-11-11",
+  "description": "FASER wind-tunnel-derived simulation database; related Ultra Stick 120 geometry",
+  "geometry_commit": "1650a6e35354708da80897bd70bf9dac5280654d",
+  "files": {
+    "FASER_Aero.mat": {
+      "url": "https://dept.aem.umn.edu/~mettler/Courses/AEM%205333%20%28spring%202013%29/Matlab/Ultrastick%20Simulation/trunk/Simulation/Libraries/FASER_Aero.mat",
+      "sha256": "02128172ab5922a7c54f66e79ada4aae3327c121a9632281a9533a306aa05bd1"
+    },
+    "FASER_config.m": {
+      "url": "https://dept.aem.umn.edu/~mettler/Courses/AEM%205333%20%28spring%202013%29/Matlab/Ultrastick%20Simulation/trunk/Simulation/Libraries/FASER_config.m",
+      "sha256": "2ac29160ffc7278b35f9ac62ca66506cf000487680f7cd94d3699721809bb204"
+    },
+    "FASER_Aero_Lib.mdl": {
+      "url": "https://dept.aem.umn.edu/~mettler/Courses/AEM%205333%20%28spring%202013%29/Matlab/Ultrastick%20Simulation/trunk/Simulation/Libraries/FASER_Aero_Lib.mdl",
+      "sha256": "2b4a729c3ba65cdafc6bc397122f4afeaa099d55e5a65ba10d1eeb822016fbaa"
+    },
+    "UltraStick120.avl": {
+      "url": "https://raw.githubusercontent.com/UASLab/OpenFlightSim/1650a6e35354708da80897bd70bf9dac5280654d/AeroDefinitions/AVL/UltraStick120/def/UltraStick120.avl",
+      "sha256": "9bc972a173ca34586bbce0cb27a6616427ba86e755872dc4b513dc4ae1fd4a0b"
+    },
+    "OpenFlightSim_LICENSE.md": {
+      "url": "https://raw.githubusercontent.com/UASLab/OpenFlightSim/master/LICENSE.md",
+      "sha256": "508a77d2e7b51d98adeed32648ad124b7b30241a8e70b2e72c99f92d8e5874d1"
+    }
+  },
+  "references": {
+    "FASER_aircraft": "https://ntrs.nasa.gov/citations/20060022541",
+    "wind_tunnel_campaign": "https://ntrs.nasa.gov/citations/20030014297"
+  }
+}

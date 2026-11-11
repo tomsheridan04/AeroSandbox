@@ -1,0 +1,15 @@
+{
+  "source": "https://ntrs.nasa.gov/api/citations/19930091504/downloads/19930091504.pdf",
+  "report": "NACA TR 431 (1932)",
+  "retrieved": "2026-11-11",
+  "tables": {
+    "ordinates": "Table I, printed page 11, PDF page 13",
+    "yawed_polar": "Table II, printed page 11, PDF page 13",
+    "zero_yaw_summary": "Table IX, printed page 12, PDF page 14"
+  },
+  "sha256": {
+    "naca-tr-431.pdf": "4e3d2ef104e55afa7cad0e25e412aefeac3ef8a0d774d1e363a420c6448e2ea2",
+    "clark_y_ar6_yaw_minus20.csv": "72b906671e3d4a385bdbb4952d66055b075d44355498a97930906e3547df3eba",
+    "clark_y_published_ordinates.csv": "7cf1129bb78aef32e48b5736076b0af7060ba1b70b107a1597cd839c71690697"
+  }
+}
